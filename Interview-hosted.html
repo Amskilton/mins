@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Board Meeting Interview</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF0EA; --paper-card:#FBFBF8; --ink:#1E2A32; --ink-soft:#54626B;
+    --line:#D7D9CE; --accent:#3E6259; --accent-soft:#DCE6E0;
+    --amber:#B8863B; --amber-soft:#F1E4CC; --red:#A13D3D; --red-soft:#F1DCDA;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:'Inter',system-ui,sans-serif; padding:20px 16px 80px;}
+  .wrap{max-width:720px; margin:0 auto;}
+  h1{font-family:'Source Serif 4',Georgia,serif; font-size:24px; margin:0 0 4px;}
+  h2{font-family:'Source Serif 4',Georgia,serif; font-size:20px; margin:0 0 4px;}
+  .sub{font-size:13px; color:var(--ink-soft); margin:0 0 18px; line-height:1.5;}
+  .nav{display:flex; gap:8px; justify-content:flex-end; margin-bottom:14px; flex-wrap:wrap;}
+  .nav a{font-size:12.5px; font-weight:600; color:var(--accent); text-decoration:none; padding:6px 12px; border-radius:999px; background:var(--accent-soft);}
+  .nav a:hover{opacity:.8;}
+  .card{background:var(--paper-card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:14px;}
+  label.fl{display:block; font-size:11.5px; font-weight:600; color:var(--ink-soft); margin:0 0 4px; text-transform:uppercase; letter-spacing:.03em;}
+  input[type=text], input[type=password], input[type=date], input[type=time], select, textarea{
+    width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:7px;
+    font-family:inherit; font-size:14px; background:#fff; color:var(--ink); outline:none; margin-bottom:12px;
+  }
+  input:focus, textarea:focus, select:focus{border-color:var(--accent);}
+  textarea{resize:vertical; min-height:70px; line-height:1.5;}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media(max-width:560px){.row{grid-template-columns:1fr;}}
+  .stickytop{position:sticky; top:0; z-index:10; background:var(--paper); padding:8px 0 4px; margin:0 -16px 8px; padding-left:16px; padding-right:16px; box-shadow:0 6px 8px -8px rgba(30,42,50,.35);}
+  .progress{padding:0 0 8px;}
+  .stickytop .voice{margin-bottom:6px; padding:9px 12px;}
+  .bar{height:6px; background:var(--line); border-radius:99px; overflow:hidden;}
+  .bar > div{height:100%; background:var(--accent); width:0; transition:width .25s;}
+  .ptext{font-size:12px; color:var(--ink-soft); margin-top:5px; display:flex; justify-content:space-between;}
+  .tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;}
+  .tab{font-size:12px; padding:5px 10px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer; color:var(--ink-soft);}
+  .tab.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .tab.done::after{content:' ✓'; color:var(--accent);} .tab.active.done::after{color:#fff;}
+  .q{border-top:1px solid var(--line); padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q-text{font-size:14.5px; font-weight:600; line-height:1.45; margin-bottom:4px;}
+  .q-why{font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:9px;}
+  .q-why b{color:var(--accent);}
+  .seg{display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:9px;}
+  .seg button{border:none; background:#fff; padding:6px 12px; font-size:12.5px; cursor:pointer; font-family:inherit; color:var(--ink-soft); border-right:1px solid var(--line);}
+  .seg button:last-child{border-right:none;}
+  .seg button.on-yes{background:var(--accent); color:#fff;}
+  .seg button.on-no{background:var(--amber); color:#fff;}
+  .seg button.on-na{background:var(--ink-soft); color:#fff;}
+  .note-box{display:none;}
+  .note-box.show{display:block;}
+  .note-box textarea{margin-bottom:0;}
+  .notice{font-size:12.5px; background:var(--amber-soft); color:#6b4e18; padding:10px 12px; border-radius:8px; line-height:1.5; margin-bottom:14px;}
+  .legal{font-size:12px; color:var(--ink-soft); line-height:1.5; margin-top:8px;}
+  .list-item{background:#fff; border:1px solid var(--line); border-radius:9px; padding:12px; margin-bottom:10px; position:relative;}
+  .list-item .rm{position:absolute; top:8px; right:10px; background:none; border:none; color:var(--red); cursor:pointer; font-size:12px; font-weight:600;}
+  button.btn{padding:9px 14px; border:1px solid var(--accent); background:#fff; color:var(--accent); border-radius:8px; font-family:inherit; font-weight:600; font-size:13px; cursor:pointer;}
+  button.btn:hover{background:var(--accent-soft);}
+  button.primary{width:100%; padding:13px; border:none; border-radius:8px; background:var(--accent); color:#fff; font-family:inherit; font-weight:600; font-size:14.5px; cursor:pointer;}
+  button.primary:disabled{opacity:.55; cursor:default;}
+  .navbtns{display:flex; justify-content:space-between; gap:10px; margin-top:6px;}
+  pre#preview{white-space:pre-wrap; font-family:'Inter',sans-serif; font-size:12.5px; background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; max-height:360px; overflow:auto; line-height:1.55;}
+  #status{margin-top:14px; font-size:13.5px; line-height:1.6;}
+  #status.error{color:var(--red);}
+  #status a{color:var(--accent); font-weight:600;}
+  .flags{margin-top:10px; padding:10px 12px; background:var(--amber-soft); border-radius:8px; font-size:12.5px;}
+  .flags strong{display:block; margin-bottom:4px; color:var(--amber);}
+  .spinner{display:inline-block; width:14px; height:14px; border:2px solid var(--accent-soft); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; margin-right:8px; vertical-align:-2px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .saved{font-size:11.5px; color:var(--ink-soft);}
+  .voice{background:var(--paper-card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:14px;}
+  .voice.live{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);}
+  .voice .vrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .voice .vstate{font-size:13px; font-weight:600; flex:1; min-width:160px;}
+  .voice .dot{display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--line); margin-right:7px;}
+  .voice.live .dot{background:var(--red); animation:pulse 1.2s infinite;}
+  @keyframes pulse{50%{opacity:.35;}}
+  .voice .interim{font-size:13px; color:var(--ink-soft); font-style:italic; margin-top:8px; min-height:18px;}
+  .voice .vhelp{font-size:12px; color:var(--ink-soft); line-height:1.5; margin-top:8px;}
+  .chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; align-items:center; font-size:12px; color:var(--ink-soft);}
+  .chip{padding:4px 10px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:12px;}
+  .chip.on{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .q.q-active{background:var(--accent-soft); margin:0 -10px; padding-left:10px; padding-right:10px; border-radius:8px;}
+  details.dbg{margin-top:10px; font-size:12px;} details.dbg pre{white-space:pre-wrap; background:#fff; border:1px solid var(--line); border-radius:6px; padding:8px; overflow:auto;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Board Meeting Interview</h1>
+  <p class="sub">Work through the questions after (or during) the meeting. Mark each matter <b>Discussed</b> or <b>Not discussed</b> and note what was actually said or decided. Your answers become the record the draft minutes are written from.</p>
+
+  <div class="notice"><b>Record only what happened.</b> Minutes are evidence. If a topic wasn't raised, mark it <i>Not discussed</i> — don't fill gaps to look thorough. Unanswered questions are left out of the minutes entirely; "Not discussed" items are kept in the record but never written up as discussion.</div>
+
+  <div class="stickytop">
+  <div class="progress">
+    <div class="bar"><div id="barFill"></div></div>
+    <div class="ptext"><span id="ptext">0 of 0 answered</span><span class="saved" id="saved">Autosaves in this browser</span></div>
+  </div>
+  <div class="voice" id="voiceBar"></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div id="sectionHost"></div>
+</div>
+
+<script>
+/* ===================== QUESTION BANK =====================
+   Each question: id, q (the question), why (why a NZ SaaS board records it).
+   Legal references are pointers for the chair to verify, not legal advice. */
+const SECTIONS = [
+  { id:'open', title:'Opening & conflicts', intro:'How the meeting was constituted and whether anyone had an interest.', qs:[
+    { id:'open_quorum', q:'Was a quorum present for the whole meeting, and did anyone join or leave part-way?', why:'A decision made without a quorum can be challenged. Record who was present for each decision if numbers changed.' },
+    { id:'open_notice', q:'Was proper notice given, or did all directors agree to waive notice?', why:'Meeting validity rests on notice (or waiver). Record it so the meeting cannot later be called irregular.' },
+    { id:'open_interests', q:'Did any director disclose an interest in any matter on the agenda (including a related party, a supplier or a customer)?', why:'Interests should be disclosed before the decision and recorded consistently in the minutes and the interests register (Companies Act 1993, interested-director provisions). Record who was interested, the nature of the interest, and whether they took part or abstained. Check the voting rules with your lawyer.' },
+    { id:'open_interests_register', q:'Does the interests register need updating as a result of anything disclosed today?', why:'Regulators compare minutes against the register. A disclosure in one but not the other looks like a control failure.' },
+    { id:'open_prev_minutes', q:'Were the minutes of the previous meeting reviewed and confirmed as a true and correct record?', why:'Confirmation is the usual first step and fixes the prior record.' },
+    { id:'open_actions', q:'Were actions from previous meetings reviewed? Which are complete, overdue or carried forward?', why:'Shows the board follows through, a key oversight indicator.' }
+  ]},
+  { id:'fin', title:'Financial position & solvency', intro:'Cash, performance, and whether the company is able to pay its debts.', qs:[
+    { id:'fin_accounts', q:'Were management accounts and cash position reviewed? What were the key numbers and variances to budget?', why:'Directors must act on informed judgement (duty of care, ss131-138 reliance on information). Record what figures the board actually saw.' },
+    { id:'fin_runway', q:'What is the cash runway, and was it discussed against forecast?', why:'A subscription business can be profitable on paper and short of cash (annual prepayments, growth spend). Runway discussion supports the going-concern assessment.' },
+    { id:'fin_solvency', q:'Did directors consider whether the company is able to pay its debts as they fall due and that assets exceed liabilities?', why:'Directors must not allow the business to trade recklessly or incur obligations they cannot meet. Record the information relied on.' },
+    { id:'fin_distribution', q:'Was any dividend, shareholder distribution, bonus issue, loan repayment to a shareholder or share buy-back discussed or approved?', why:'Before authorising a distribution each director must be satisfied the solvency test is met and sign a solvency certificate stating their opinion and grounds (s53 Companies Act 1993). Record that the certificate was signed and the grounds relied on.' },
+    { id:'fin_related_loans', q:'Were any shareholder or director loans or current account balances discussed (including the "current account")?', why:'Related-party balances attract scrutiny from IRD and auditors. Record the balance, terms and any approval.' },
+    { id:'fin_audit', q:'Were accounts, audit or review status, accountant advice, or the going-concern assumption discussed?', why:'Shows the board engages with financial reporting obligations.' }
+  ]},
+  { id:'saas', title:'SaaS performance & customers', intro:'The metrics that show whether a subscription business is healthy.', qs:[
+    { id:'saas_mrr', q:'Were MRR/ARR, new bookings, expansion and contraction reviewed? What were the figures and trend?', why:'Recurring revenue is the core health measure. Record the figures the board saw so later decisions are traceable.' },
+    { id:'saas_churn', q:'Were customer churn and net revenue retention discussed? Any notable cancellations and why?', why:'Churn drives valuation and cash planning. Record causes and any response agreed.' },
+    { id:'saas_concentration', q:'Is there reliance on a few customers or a single channel/partner (e.g. an integration or marketplace)? Was that risk discussed?', why:'Customer concentration and platform dependency are material risks to disclose to lenders, investors and buyers.' },
+    { id:'saas_pricing', q:'Were pricing, plan changes, discounts or contract terms (term, auto-renewal, SLAs, T&Cs) discussed?', why:'Changes to customer terms have legal effect (Fair Trading Act, Consumer Guarantees Act where it applies) and revenue consequences.' },
+    { id:'saas_rev_rec', q:'Were deferred revenue, annual prepayments, refunds, or revenue recognition treatment discussed?', why:'Upfront subscription fees are recognised over the service period. Matters for reporting accuracy and for the solvency test.' },
+    { id:'saas_collections', q:'Were debtors, failed payments/dunning, or bad debts discussed?', why:'Direct cash-flow and revenue-quality impact.' }
+  ]},
+  { id:'tax', title:'Tax, GST & grants', intro:'Compliance and incentives, including cross-border subscription sales.', qs:[
+    { id:'tax_compliance', q:'Were IRD obligations discussed (GST returns, PAYE, provisional tax, income tax)? Are all filings and payments current?', why:'Unpaid PAYE/GST can create personal exposure for directors. Record that compliance status was checked.' },
+    { id:'tax_offshore', q:'Were GST or sales-tax obligations on offshore customers, or tax registration in other countries, discussed?', why:'Selling subscriptions abroad can trigger foreign sales-tax/VAT obligations. Record what advice was relied on.' },
+    { id:'tax_rdti', q:'Was the R&D Tax Incentive, a Callaghan Innovation grant, or other funding discussed? Were claims or deadlines noted?', why:'Software development is a prime candidate. Incentive claims need contemporaneous evidence; the minutes can form part of it.' },
+    { id:'tax_resident', q:'Where were directors physically located when decisions were made, and was tax residency / place of central management discussed?', why:'Where directors exercise control can affect tax residency. The location fields on the console and intake feed this.' }
+  ]},
+  { id:'sec', title:'Security, privacy & data', intro:'Cyber and data obligations, which sit squarely with the board.', qs:[
+    { id:'sec_incidents', q:'Were any security incidents, near-misses or vulnerabilities reported since the last meeting?', why:'Boards should be told. Record what was reported and what was done.' },
+    { id:'sec_breach', q:'Was any privacy breach assessed for notification to the Privacy Commissioner and affected individuals?', why:'The Privacy Act 2020 requires notification of a breach that is likely to cause serious harm. Record the assessment and who made it, even where the answer was "no".' },
+    { id:'sec_offshore', q:'Were offshore data hosting, sub-processors or sending customer personal information overseas discussed?', why:'Privacy Act 2020 IPP12 restricts disclosure of personal information overseas. Vendor choices (cloud, AI, email) are in scope.' },
+    { id:'sec_assurance', q:'Were security certifications, penetration tests, backups, access controls, or customer security questionnaires discussed?', why:'Enterprise customers increasingly require evidence (e.g. SOC 2 / ISO 27001). Record the board\'s oversight.' },
+    { id:'sec_ai', q:'Was the use of AI tools, including customer data in AI services, discussed?', why:'Emerging privacy, IP and contractual risk. Record any policy or decision.' }
+  ]},
+  { id:'risk', title:'Risk, continuity & insurance', intro:'What could stop the business and how the board has prepared.', qs:[
+    { id:'risk_register', q:'Was the risk register reviewed, or any new strategic or operational risk identified?', why:'Shows active risk oversight. Record the risk, owner and mitigation.' },
+    { id:'risk_bcp', q:'Were business continuity, disaster recovery, hosting dependency or uptime/SLA performance discussed?', why:'Outages can breach customer contracts and damage retention.' },
+    { id:'risk_keyperson', q:'Were key-person dependency, succession, or source-code/credential access (bus factor) discussed?', why:'Common fragility in small software companies; also relevant to insurers and buyers.' },
+    { id:'risk_insurance', q:'Were insurance cover (cyber, professional indemnity, directors\' liability, public liability) or renewals discussed?', why:'Record the cover reviewed and any decision to change it.' },
+    { id:'risk_ip', q:'Were IP ownership, contractor IP assignments, open-source licensing, or trademark matters discussed?', why:'The software is the main asset. Gaps in IP assignment are a classic due-diligence finding.' }
+  ]},
+  { id:'people', title:'People, health & safety', intro:'Employment, contractors, and director due diligence on health and safety.', qs:[
+    { id:'people_hs', q:'Was health and safety reviewed (incidents, hazards, wellbeing, remote workers)? What did the board do to verify it?', why:'Officers have a due-diligence duty under the Health and Safety at Work Act 2015. Record what was reviewed and what was asked.' },
+    { id:'people_headcount', q:'Were hiring, resignations, contractor engagements, or restructuring discussed?', why:'Record decisions and the information considered.' },
+    { id:'people_remuneration', q:'Was director or executive remuneration, share options or other benefits discussed or approved?', why:'Director benefits need appropriate approval and recording. Check the process with your lawyer.' },
+    { id:'people_employment', q:'Were employment agreements, personal grievances, or disputes discussed?', why:'Record only what the board was told and what it decided.' }
+  ]},
+  { id:'legal', title:'Legal, corporate & compliance', intro:'Statutory housekeeping and contracts.', qs:[
+    { id:'legal_annual', q:'Were the annual return, registered office, share register, or other Companies Office filings discussed?', why:'Missed filings create penalties and look bad on review.' },
+    { id:'legal_contracts', q:'Were any significant contracts, leases, loans, guarantees or security over assets discussed or approved?', why:'Record the key terms, the reasons, and who was authorised to sign.' },
+    { id:'legal_related', q:'Were any related-party or non-arm\'s-length transactions discussed?', why:'These attract scrutiny. Record the terms and how the board satisfied itself they were fair.' },
+    { id:'legal_disputes', q:'Were any disputes, claims, regulatory contact or legal advice discussed?', why:'Record the advice received (without waiving privilege unintentionally; consider leaving detail out of the minutes).' },
+    { id:'legal_shareholders', q:'Were shareholder matters discussed (new shares, transfers, shareholder agreement, constitution, or communications)?', why:'Share issues and transfers need proper authorisation and register updates.' }
+  ]},
+  { id:'strategy', title:'Strategy & product', intro:'Where the business is heading.', qs:[
+    { id:'strat_roadmap', q:'Was the product roadmap, key development priority or major investment discussed or approved?', why:'Record the rationale and the information the board relied on.' },
+    { id:'strat_market', q:'Were competitors, market changes, expansion, partnerships, funding, or a sale/exit discussed?', why:'Material strategic decisions should show informed, good-faith consideration.' },
+    { id:'strat_budget', q:'Was a budget, forecast, or capital commitment approved?', why:'Record the figure approved and the basis.' }
+  ]}
+];
+
+/* ===================== STATE ===================== */
+/* No names are stored in this page's source. Directors are entered once on the Meeting tab and
+   remembered in this browser only (they survive "Clear this interview"). */
+const ROSTER_KEY = 'boardInterview.roster';
+function loadRoster(){
+  try{ const r = JSON.parse(localStorage.getItem(ROSTER_KEY)); if (Array.isArray(r) && r.length) return r.map(d => ({name:d.name || '', present:true, location:'', via:'in_person'})); }catch(e){}
+  return [{name:'', present:true, location:'', via:'in_person'}, {name:'', present:true, location:'', via:'in_person'}];
+}
+function saveRoster(){ try{ localStorage.setItem(ROSTER_KEY, JSON.stringify((state.roster || []).map(d => ({name:d.name})))); }catch(e){} }
+const VIA_LABEL = { in_person:'in person', online:'online' };
+const STORE_KEY = 'boardInterview.v1';
+let state = loadState();
+let current = 'meeting'; // 'meeting' | section id | 'resolutions' | 'review'
+
+function blankState(){
+  return {
+    meta:{ date:new Date().toISOString().slice(0,10), start:'', end:'', mode:'', initiatedFrom:'', location:'', chair:'', directors:'', apologies:'', quorum:'', nextMeeting:'' },
+    roster: loadRoster(),
+    answers:{},   // qid -> {status:'yes'|'no'|'na', note:''}
+    resolutions:[], // {text, moved, seconded, outcome, abstentions, notes}
+    actions:[],     // {what, who, due}
+    general:''
+  };
+}
+function loadState(){
+  try{ const s = JSON.parse(localStorage.getItem(STORE_KEY)); if(s && s.meta) return Object.assign(blankState(), s); }catch(e){}
+  return blankState();
+}
+function presentDirectors(){ return (state.roster || []).filter(d => d.present && (d.name || '').trim()); }
+function directorsString(){
+  return presentDirectors().map(d => d.name.trim() + ' (' + [(d.location || '').trim(), VIA_LABEL[d.via] || ''].filter(Boolean).join(', ') + ')').join('; ');
+}
+function absentNames(){ return (state.roster || []).filter(d => !d.present && (d.name || '').trim()).map(d => d.name.trim()); }
+let saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    saveRoster();
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); document.getElementById('saved').textContent = 'Saved in this browser ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+    catch(e){ document.getElementById('saved').textContent = 'Autosave unavailable in this browser'; }
+    updateProgress();
+  }, 250);
+}
+
+/* ===================== RENDER ===================== */
+const el = (tag, attrs, kids) => {
+  const n = document.createElement(tag);
+  Object.keys(attrs || {}).forEach(k => {
+    if (k === 'class') n.className = attrs[k];
+    else if (k === 'text') n.textContent = attrs[k];
+    else if (k.slice(0,2) === 'on') n.addEventListener(k.slice(2), attrs[k]);
+    else n.setAttribute(k, attrs[k]);
+  });
+  (kids || []).forEach(c => n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c));
+  return n;
+};
+const allQs = () => SECTIONS.reduce((a, s) => a.concat(s.qs), []);
+
+function isSectionDone(s){ return s.qs.every(q => state.answers[q.id] && state.answers[q.id].status); }
+
+function renderTabs(){
+  const t = document.getElementById('tabs'); t.innerHTML = '';
+  const add = (id, label, done) => t.appendChild(el('div', {class:'tab' + (current===id?' active':'') + (done?' done':''), text:label, onclick:()=>go(id)}));
+  add('meeting', 'Meeting', !!(state.meta.date && state.meta.chair && presentDirectors().length && state.meta.mode));
+  SECTIONS.forEach(s => add(s.id, s.title.split(' ')[0].replace('&',''), isSectionDone(s)));
+  add('resolutions', 'Decisions', false);
+  add('review', 'Review', false);
+}
+function go(id){ current = id; render(); window.scrollTo(0,0); }
+
+function updateProgress(){
+  const qs = allQs(); const n = qs.filter(q => state.answers[q.id] && state.answers[q.id].status).length;
+  document.getElementById('barFill').style.width = (100*n/qs.length) + '%';
+  document.getElementById('ptext').textContent = n + ' of ' + qs.length + ' questions answered';
+  renderTabs();
+}
+
+function field(label, key, type, ph){
+  const w = el('div');
+  w.appendChild(el('label', {class:'fl', text:label}));
+  const i = el('input', {type:type||'text', placeholder:ph||''});
+  i.value = state.meta[key] || '';
+  i.addEventListener('input', () => { state.meta[key] = i.value; save(); });
+  w.appendChild(i); return w;
+}
+function selectField(label, key, opts){
+  const w = el('div'); w.appendChild(el('label', {class:'fl', text:label}));
+  const s = el('select'); opts.forEach(o => s.appendChild(el('option', {value:o[0], text:o[1]})));
+  s.value = state.meta[key] || ''; s.addEventListener('change', () => { state.meta[key] = s.value; save(); render(); });
+  w.appendChild(s); return w;
+}
+
+function renderRoster(c){
+  c.appendChild(el('label', {class:'fl', text:'Directors — tick who attended and where each was'}));
+  state.roster.forEach((d, idx) => {
+    const it = el('div', {class:'list-item'});
+    it.appendChild(el('button', {type:'button', class:'rm', text:'Remove', onclick:()=>{ if (confirm('Remove ' + (d.name || 'this director') + ' from the list?')){ state.roster.splice(idx,1); save(); render(true); } }}));
+    const top = el('label', {style:'display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600; margin-bottom:10px;'});
+    const cb = el('input', {type:'checkbox'}); cb.checked = !!d.present; cb.addEventListener('change', () => { d.present = cb.checked; save(); render(true); });
+    top.appendChild(cb); top.appendChild(document.createTextNode(d.present ? 'Present' : 'Absent (will be listed as an apology)')); it.appendChild(top);
+    it.appendChild(el('label', {class:'fl', text:'Name'}));
+    const n = el('input', {type:'text', placeholder:'Full name'}); n.value = d.name || ''; n.addEventListener('input', () => { d.name = n.value; save(); }); it.appendChild(n);
+    if (d.present){
+      const row = el('div', {class:'row'});
+      const w1 = el('div'); w1.appendChild(el('label', {class:'fl', text:'Located at'}));
+      const l = el('input', {type:'text', placeholder:'City / address'}); l.value = d.location || ''; l.addEventListener('input', () => { d.location = l.value; save(); }); w1.appendChild(l); row.appendChild(w1);
+      const w2 = el('div'); w2.appendChild(el('label', {class:'fl', text:'Attending'}));
+      const v = el('select'); [['in_person','In person'],['online','Online']].forEach(o => v.appendChild(el('option', {value:o[0], text:o[1]}))); v.value = d.via || 'in_person'; v.addEventListener('change', () => { d.via = v.value; save(); }); w2.appendChild(v); row.appendChild(w2);
+      it.appendChild(row);
+    }
+    c.appendChild(it);
+  });
+  c.appendChild(el('button', {type:'button', class:'btn', text:'+ Add director', onclick:()=>{ state.roster.push({name:'', present:true, location:'', via:'in_person'}); save(); render(true); }}));
+  c.appendChild(el('div', {style:'height:14px'}));
+}
+function renderMeeting(host){
+  const c = el('div', {class:'card'});
+  c.appendChild(el('h2', {text:'Meeting details'}));
+  c.appendChild(el('p', {class:'sub', text:'Start with how the meeting was held and who was there.'}));
+  const r1 = el('div', {class:'row'}); r1.appendChild(field('Meeting date','date','date')); r1.appendChild(field('Chairperson','chair','text','Chairperson full name')); c.appendChild(r1);
+  const r2 = el('div', {class:'row'}); r2.appendChild(field('Start time','start','time')); r2.appendChild(field('End time','end','time')); c.appendChild(r2);
+  c.appendChild(selectField('How was the meeting held?','mode',[['','Choose…'],['in_person','In person'],['online','Online (audio/video link)'],['hybrid','Hybrid (some in person, some online)']]));
+  if (state.meta.mode === 'online' || state.meta.mode === 'hybrid') c.appendChild(field('Online meeting initiated from (who/where/platform)','initiatedFrom','text','e.g. Andrew, Google Meet from Auckland'));
+  c.appendChild(field('Physical location (if any)','location','text','Address or room'));
+  renderRoster(c);
+  c.appendChild(field('Apologies','apologies','text','None'));
+  c.appendChild(selectField('Was a quorum present?','quorum',[['','Choose…'],['yes','Yes — quorum present throughout'],['partial','Quorum present for part only (explain in Opening)'],['no','No quorum']]));
+  host.appendChild(c);
+  host.appendChild(navButtons(null, SECTIONS[0].id));
+}
+
+function renderQuestions(host, s){
+  const c = el('div', {class:'card'});
+  c.appendChild(el('h2', {text:s.title}));
+  c.appendChild(el('p', {class:'sub', text:s.intro}));
+  s.qs.forEach(q => {
+    const a = state.answers[q.id] || (state.answers[q.id] = {status:'', note:''});
+    const box = el('div', {class:'q' + (voice.on && voice.q && voice.q.id === q.id ? ' q-active' : ''), id:'q_' + q.id});
+    box.appendChild(el('div', {class:'q-text', text:q.q}));
+    const why = el('div', {class:'q-why'}); why.appendChild(el('b', {text:'Why it matters: '})); why.appendChild(document.createTextNode(q.why)); box.appendChild(why);
+    const note = el('div', {class:'note-box' + (a.status === 'yes' ? ' show' : '')});
+    const ta = el('textarea', {id:'ta_' + q.id, placeholder:'What was said or decided? Names, figures, who raised it, what was agreed.'});
+    ta.value = a.note || ''; ta.addEventListener('input', () => { a.note = ta.value; save(); });
+    note.appendChild(ta);
+    const seg = el('div', {class:'seg'});
+    const mk = (val, label, cls) => { const b = el('button', {type:'button', class:a.status===val?cls:'', text:label});
+      b.addEventListener('click', () => { a.status = (a.status === val ? '' : val); save(); render(true); }); return b; };
+    seg.appendChild(mk('yes','Discussed','on-yes')); seg.appendChild(mk('no','Not discussed','on-no')); seg.appendChild(mk('na','Not applicable','on-na'));
+    box.appendChild(seg); box.appendChild(note); c.appendChild(box);
+  });
+  host.appendChild(c);
+  const i = SECTIONS.findIndex(x => x.id === s.id);
+  host.appendChild(navButtons(i === 0 ? 'meeting' : SECTIONS[i-1].id, i === SECTIONS.length-1 ? 'resolutions' : SECTIONS[i+1].id));
+}
+
+function renderResolutions(host){
+  const c = el('div', {class:'card'});
+  c.appendChild(el('h2', {text:'Decisions, actions & close'}));
+  c.appendChild(el('p', {class:'sub', text:'Anything the board formally resolved. Each resolution is recorded with mover, seconder and outcome.'}));
+  state.resolutions.forEach((r, idx) => {
+    const it = el('div', {class:'list-item'});
+    it.appendChild(el('button', {type:'button', class:'rm', text:'Remove', onclick:()=>{ state.resolutions.splice(idx,1); save(); render(true); }}));
+    const bind = (label, key, ph, multi) => { it.appendChild(el('label', {class:'fl', text:label}));
+      const i = multi ? el('textarea', {placeholder:ph}) : el('input', {type:'text', placeholder:ph});
+      i.value = r[key] || ''; i.addEventListener('input', () => { r[key] = i.value; save(); }); it.appendChild(i); };
+    bind('Resolution (exact wording: "That the board …")','text','That the board approves …', true);
+    bind('Moved by','moved','Director name'); bind('Seconded by','seconded','Director name');
+    bind('Outcome','outcome','e.g. Carried unanimously / Carried, one against');
+    bind('Abstentions / interested directors who did not vote','abstentions','None');
+    bind('Information the board relied on','notes','e.g. management accounts to 30 Sept, accountant advice', true);
+    c.appendChild(it);
+  });
+  c.appendChild(el('button', {type:'button', class:'btn', text:'+ Add resolution', onclick:()=>{ state.resolutions.push({}); save(); render(true); }}));
+  c.appendChild(el('div', {style:'height:18px'}));
+
+  state.actions.forEach((a, idx) => {
+    const it = el('div', {class:'list-item'});
+    it.appendChild(el('button', {type:'button', class:'rm', text:'Remove', onclick:()=>{ state.actions.splice(idx,1); save(); render(true); }}));
+    const bind = (label, key, ph) => { it.appendChild(el('label', {class:'fl', text:label}));
+      const i = el('input', {type:'text', placeholder:ph}); i.value = a[key] || ''; i.addEventListener('input', () => { a[key] = i.value; save(); }); it.appendChild(i); };
+    bind('Action','what','What needs to happen'); bind('Owner','who','Who'); bind('Due','due','Date');
+    c.appendChild(it);
+  });
+  c.appendChild(el('button', {type:'button', class:'btn', text:'+ Add action', onclick:()=>{ state.actions.push({}); save(); render(true); }}));
+  c.appendChild(el('div', {style:'height:18px'}));
+
+  c.appendChild(el('label', {class:'fl', text:'General business — anything else raised'}));
+  const g = el('textarea', {placeholder:'Anything raised that doesn\'t fit above'}); g.value = state.general || ''; g.addEventListener('input', () => { state.general = g.value; save(); }); c.appendChild(g);
+  c.appendChild(field('Next meeting (date/time/format)','nextMeeting','text','e.g. 12 December 2026, 10am, hybrid'));
+  host.appendChild(c);
+  host.appendChild(navButtons(SECTIONS[SECTIONS.length-1].id, 'review'));
+}
+
+function navButtons(prev, next){
+  const d = el('div', {class:'navbtns'});
+  d.appendChild(prev ? el('button', {type:'button', class:'btn', text:'← Back', onclick:()=>go(prev)}) : el('span'));
+  d.appendChild(next ? el('button', {type:'button', class:'btn', text:'Next →', onclick:()=>go(next)}) : el('span'));
+  return d;
+}
+
+/* ===================== RECORD BUILDER ===================== */
+const MODE_LABEL = { in_person:'In person', online:'Online (audio/audio-visual link)', hybrid:'Hybrid' };
+function buildRecord(){
+  const m = state.meta, L = [];
+  L.push('STRUCTURED BOARD MEETING INTERVIEW RECORD');
+  L.push('This record was given by the chairperson/secretary in answer to a fixed governance question set. It is the authoritative account of the meeting. Questions marked "NOT DISCUSSED" were not raised and must not be written up as discussion. Unanswered questions are omitted.');
+  L.push('');
+  L.push('MEETING DETAILS');
+  L.push('Date: ' + m.date);
+  if (m.start) L.push('Start time: ' + m.start);
+  if (m.end) L.push('End time: ' + m.end);
+  L.push('Meeting mode: ' + (MODE_LABEL[m.mode] || 'not stated'));
+  if (m.initiatedFrom) L.push('Online meeting initiated from: ' + m.initiatedFrom);
+  if (m.location) L.push('Physical location: ' + m.location);
+  L.push('Chairperson: ' + (m.chair || 'not stated'));
+  L.push('Directors present (with locations): ' + (directorsString() || 'not stated'));
+  const apol = [m.apologies].concat(absentNames()).filter(x => x && x.trim()).join('; ');
+  L.push('Apologies / absent: ' + (apol || 'none stated'));
+  L.push('Quorum: ' + ({yes:'present throughout', partial:'present for part of the meeting only', no:'not present'}[m.quorum] || 'not stated'));
+  SECTIONS.forEach(s => {
+    const lines = [];
+    s.qs.forEach(q => {
+      const a = state.answers[q.id]; if (!a || !a.status) return;
+      if (a.status === 'yes') lines.push('- DISCUSSED: ' + q.q + '\n  Record: ' + (a.note && a.note.trim() ? a.note.trim() : '(no detail provided)'));
+      else if (a.status === 'no') lines.push('- NOT DISCUSSED: ' + q.q);
+    });
+    if (lines.length){ L.push(''); L.push(s.title.toUpperCase()); L.push.apply(L, lines); }
+  });
+  if (state.resolutions.some(r => r.text && r.text.trim())){
+    L.push(''); L.push('RESOLUTIONS');
+    state.resolutions.filter(r => r.text && r.text.trim()).forEach((r, i) => {
+      L.push((i+1) + '. ' + r.text.trim());
+      L.push('   Moved: ' + (r.moved || 'not stated') + '; Seconded: ' + (r.seconded || 'not stated') + '; Outcome: ' + (r.outcome || 'not stated') + '; Abstentions/interested: ' + (r.abstentions || 'none stated'));
+      if (r.notes && r.notes.trim()) L.push('   Information relied on: ' + r.notes.trim());
+    });
+  }
+  if (state.actions.some(a => a.what && a.what.trim())){
+    L.push(''); L.push('ACTIONS');
+    state.actions.filter(a => a.what && a.what.trim()).forEach(a => L.push('- ' + a.what.trim() + ' (Owner: ' + (a.who || 'unassigned') + '; Due: ' + (a.due || 'not set') + ')'));
+  }
+  if (state.general && state.general.trim()){ L.push(''); L.push('GENERAL BUSINESS'); L.push(state.general.trim()); }
+  if (state.nextMeeting || (state.meta.nextMeeting)) {}
+  const nm = state.meta.nextMeeting; if (nm){ L.push(''); L.push('NEXT MEETING: ' + nm); }
+  return L.join('\n');
+}
+
+/* ===================== REVIEW & SUBMIT ===================== */
+function renderReview(host){
+  const c = el('div', {class:'card'});
+  c.appendChild(el('h2', {text:'Review & generate'}));
+  const problems = [];
+  if (!state.meta.date) problems.push('Meeting date is missing.');
+  if (!presentDirectors().length) problems.push('No directors are marked present.');
+  if (!state.meta.mode) problems.push('Meeting mode (in person / online / hybrid) is not set.');
+  if (!state.meta.quorum) problems.push('Quorum has not been confirmed.');
+  const unanswered = allQs().filter(q => !(state.answers[q.id] && state.answers[q.id].status)).length;
+  const thin = allQs().filter(q => state.answers[q.id] && state.answers[q.id].status === 'yes' && !(state.answers[q.id].note || '').trim()).length;
+  if (thin) problems.push(thin + ' "Discussed" answer(s) have no detail — the minutes will be thin there.');
+  if (problems.length){ const n = el('div', {class:'notice'}); n.appendChild(el('b', {text:'Check before generating'})); const ul = el('ul', {style:'margin:6px 0 0; padding-left:18px'}); problems.forEach(p => ul.appendChild(el('li', {text:p}))); n.appendChild(ul); c.appendChild(n); }
+  c.appendChild(el('p', {class:'sub', text: unanswered + ' question(s) left unanswered; they will be omitted from the minutes. This is the exact record that will be sent to be drafted:'}));
+  c.appendChild(el('pre', {id:'preview', text:buildRecord()}));
+  c.appendChild(el('div', {style:'height:14px'}));
+  const cfg = el('div', {class:'list-item'});
+  cfg.appendChild(el('label', {class:'fl', text:'Apps Script Web App URL (ends in /exec)'}));
+  const u = el('input', {type:'text', placeholder:'https://script.google.com/macros/s/.../exec'}); u.value = cfgGet('url'); u.addEventListener('input', () => cfgSet('url', u.value)); cfg.appendChild(u);
+  cfg.appendChild(el('label', {class:'fl', text:'Access key (the WEBAPP_KEY Script Property)'}));
+  const k = el('input', {type:'password', placeholder:'long random key', autocomplete:'off'}); k.value = cfgGet('key'); k.addEventListener('input', () => cfgSet('key', k.value)); cfg.appendChild(k);
+  cfg.appendChild(el('div', {class:'legal', text:'Stored only in this browser. Never put the key in the page source.'}));
+  c.appendChild(cfg);
+  const btn = el('button', {type:'button', class:'primary', id:'genBtn', text:'Generate draft minutes'}); btn.addEventListener('click', submit); c.appendChild(btn);
+  c.appendChild(el('div', {style:'height:8px'}));
+  c.appendChild(el('button', {type:'button', class:'btn', text:'Copy record (to paste into the Intake page)', onclick:copyRecord}));
+  c.appendChild(el('div', {id:'status'}));
+  c.appendChild(el('p', {class:'legal', text:'Generated minutes are a draft for the chairperson to check and sign. This tool is not legal advice; confirm statutory points (interested-director voting, distributions, filings) with your lawyer or accountant.'}));
+  const clr = el('p', {class:'legal'}); clr.appendChild(el('a', {href:'#', text:'Clear this interview and start again', onclick:(e)=>{ e.preventDefault(); if (confirm('Clear all answers from this browser?')){ state = blankState(); save(); go('meeting'); } }})); c.appendChild(clr);
+  host.appendChild(c);
+  host.appendChild(navButtons('resolutions', null));
+}
+
+function cfgGet(k){ try{ return localStorage.getItem('boardInterview.cfg.' + k) || ''; }catch(e){ return ''; } }
+function cfgSet(k, v){ try{ localStorage.setItem('boardInterview.cfg.' + k, v); }catch(e){} }
+function submit(){
+  const btn = document.getElementById('genBtn'), st = document.getElementById('status');
+  const url = cfgGet('url').trim(), key = cfgGet('key').trim();
+  st.className = ''; st.textContent = '';
+  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url) || !key){ st.className = 'error'; st.textContent = 'Enter the Web App URL (ends in /exec) and access key above first, or use Copy record and paste it into the Intake page.'; return; }
+  btn.disabled = true;
+  const sp = el('span', {class:'spinner'}); st.appendChild(sp); st.appendChild(document.createTextNode('Drafting the minutes… this can take a minute or two.'));
+  const payload = { key:key, meetingDate: state.meta.date, directorsPresentRaw: directorsString(), transcript: buildRecord() };
+  fetch(url, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload), redirect:'follow' })
+    .then(r => r.json())
+    .then(function(r){
+      btn.disabled = false; st.textContent = '';
+      if (!r.ok){ st.className = 'error'; st.appendChild(document.createTextNode('Something went wrong: ' + r.message)); addDebug(st, r.debugLog); return; }
+      const p = el('div'); p.appendChild(document.createTextNode('✓ Draft minutes created. '));
+      p.appendChild(el('a', {href:r.docUrl, target:'_blank', rel:'noopener', text:'Open the draft'})); st.appendChild(p);
+      if (r.flags && r.flags.length){ const f = el('div', {class:'flags'}); f.appendChild(el('strong', {text:'Flagged for chair review'})); r.flags.forEach(x => f.appendChild(el('div', {text:'• ' + x}))); st.appendChild(f); }
+      addDebug(st, r.debugLog);
+    })
+    .catch(function(err){
+      btn.disabled = false; st.textContent = ''; st.className = 'error';
+      st.appendChild(document.createTextNode('Could not reach the Web App (' + err.message + '). Check the URL, that the deployment is set to "Anyone", and that you created a new version after adding doPost. The record is still saved here; use Copy record as a fallback.'));
+    });
+}
+function copyRecord(){
+  const t = buildRecord();
+  const done = () => { const st = document.getElementById('status'); st.className = ''; st.textContent = 'Record copied. Paste it into the Transcript / notes box on the Intake page.'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => window.prompt('Copy this record:', t));
+  else window.prompt('Copy this record:', t);
+}
+function addDebug(host, log){
+  if (!log || !log.length) return;
+  const d = el('details', {class:'dbg'}); d.appendChild(el('summary', {text:'Technical details'}));
+  d.appendChild(el('pre', {text:log.map(l => '[' + l.status + '] ' + l.step + (l.detail ? ' — ' + l.detail : '')).join('\n')})); host.appendChild(d);
+}
+
+function render(keepScroll){
+  const y = window.scrollY, host = document.getElementById('sectionHost'); host.innerHTML = '';
+  if (current === 'meeting') renderMeeting(host);
+  else if (current === 'resolutions') renderResolutions(host);
+  else if (current === 'review') renderReview(host);
+  else renderQuestions(host, SECTIONS.find(s => s.id === current));
+  updateProgress();
+  if (keepScroll === true) window.scrollTo(0, y);
+}
+
+/* ===================== VOICE MODE =====================
+   The page reads each question aloud (browser speech synthesis) and listens for the directors'
+   answer (browser speech recognition, Chrome/Edge/Safari). Recognition is paused while a question
+   is being read so the page doesn't hear itself. Everything lands in the same editable notes
+   boxes, so the chair can correct mistakes before generating. Voice commands (said on their own):
+   "not discussed", "not applicable", "next", "back", "repeat", "pause". */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const TTS = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+const voice = { on:false, idx:0, q:null, phase:'idle', rec:null, speaker:'', msg:'', interim:'', fatal:false };
+
+function pickVoice(){
+  if (!TTS) return null; const vs = TTS.getVoices() || [];
+  return vs.find(v => /en[-_]NZ/i.test(v.lang)) || vs.find(v => /en[-_]AU/i.test(v.lang)) || vs.find(v => /en[-_]GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
+}
+function speak(text, done){
+  if (!TTS){ done && done(); return; }
+  try{ TTS.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(text); const v = pickVoice(); if (v) u.voice = v; u.lang = (v && v.lang) || 'en-NZ'; u.rate = 0.95;
+  let finished = false; const fin = () => { if (!finished){ finished = true; done && done(); } };
+  u.onend = fin; u.onerror = fin;
+  setTimeout(fin, Math.max(8000, text.length * 90)); // safety net if the browser never fires onend
+  TTS.speak(u);
+}
+function directorNames(){ return presentDirectors().map(d => d.name.trim()).slice(0, 8); }
+function renderVoiceBar(){
+  const bar = document.getElementById('voiceBar'); if (!bar) return; bar.innerHTML = '';
+  bar.className = 'voice' + (voice.on && voice.phase === 'listening' ? ' live' : '');
+  const row = el('div', {class:'vrow'});
+  const st = el('div', {class:'vstate'}); st.appendChild(el('span', {class:'dot'}));
+  st.appendChild(document.createTextNode(voice.msg || (voice.on ? '' : 'Voice interview: the page asks each question aloud and records the answer.')));
+  row.appendChild(st);
+  if (!voice.on){
+    row.appendChild(el('button', {type:'button', class:'btn', text:voice.noMic ? '🎙 Try microphone again' : '🎙 Start voice interview', onclick:()=>{ voice.noMic = false; startVoice(); }}));
+    if (voice.noMic) row.appendChild(el('button', {type:'button', class:'btn', text:'🔊 Read questions aloud only', onclick:()=>{ voice.noMic = true; beginVoice(); }}));
+  } else {
+    row.appendChild(el('button', {type:'button', class:'btn', text:'↺ Repeat', onclick:()=>askCurrent()}));
+    row.appendChild(el('button', {type:'button', class:'btn', text:'Skip →', onclick:()=>advance(1)}));
+    row.appendChild(el('button', {type:'button', class:'btn', text:'⏸ Pause', onclick:()=>stopVoice('Paused. Press Start to resume where you left off.')}));
+  }
+  bar.appendChild(row);
+  if (voice.on && SR){
+    bar.appendChild(el('div', {class:'interim', text: voice.interim ? '“' + voice.interim + '”' : ''}));
+    const names = directorNames();
+    if (names.length){
+      const c = el('div', {class:'chips'}); c.appendChild(document.createTextNode('Who is speaking?'));
+      [''].concat(names).forEach(n => c.appendChild(el('span', {class:'chip' + (voice.speaker === n ? ' on' : ''), text:n || 'Not tagged', onclick:()=>{ voice.speaker = n; renderVoiceBar(); }})));
+      bar.appendChild(c);
+    }
+  }
+  if (!voice.on && !voice.msg){
+    const help = []; if (!TTS) help.push('This browser cannot read aloud.'); if (!SR) help.push('Speech recognition is not available in this browser (use Chrome or Edge), so questions will be read aloud but answers need typing or keyboard dictation.');
+    bar.appendChild(el('div', {class:'vhelp', text: help.join(' ') || 'Say "not discussed", "not applicable", "next", "back", "repeat" or "pause" on their own as commands. Everything else you say is recorded as the answer. Pick who is speaking to tag each answer. Speech recognition needs a connection and a microphone permission.'}));
+  }
+}
+function micHelp(err, state){
+  const how = ' To allow it: click the padlock (or tune) icon at the left of the address bar > Site settings > Microphone > Allow, then reload this page. Or open chrome://settings/content/microphone and remove this site from the Blocked list.';
+  if (state === 'denied') return 'The browser has this site\'s microphone set to Blocked.' + how;
+  if (err && err.name === 'NotFoundError') return 'No microphone was found. Plug one in or check your system sound settings.';
+  if (err && err.name === 'NotReadableError') return 'The microphone is in use by another app (close other apps or tabs using it).';
+  return 'The browser would not show a microphone prompt. Google\'s Apps Script frame appears to block microphone access for this page, which cannot be changed from inside the page. Questions will still be read aloud; answer by typing, by keyboard dictation (Windows: Win+H, Mac: press Fn twice), or record the meeting and upload it on the Intake page.';
+}
+function startVoice(){
+  if (!SR || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return beginVoice();
+  voice.msg = 'Requesting microphone… please click Allow if the browser asks.'; renderVoiceBar();
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    stream.getTracks().forEach(t => t.stop()); beginVoice();
+  }).catch(function(err){
+    const finish = function(state){ voice.noMic = true; voice.msg = micHelp(err, state); renderVoiceBar(); };
+    try{ navigator.permissions.query({name:'microphone'}).then(r => finish(r.state), () => finish('')); }catch(e){ finish(''); }
+  });
+}
+function beginVoice(){
+  if (!TTS && !SR){ voice.msg = 'This browser supports neither speech output nor input. Try Chrome or Edge.'; renderVoiceBar(); return; }
+  const qs = allQs();
+  let i = qs.findIndex(q => !(state.answers[q.id] && state.answers[q.id].status)); if (i < 0) i = 0;
+  voice.on = true; voice.idx = i; voice.fatal = false; voice.msg = ''; voice.interim = '';
+  if (TTS) { try{ TTS.getVoices(); }catch(e){} }
+  showCurrent();
+}
+function stopVoice(msg){
+  voice.on = false; voice.phase = 'idle'; voice.interim = ''; voice.msg = msg || '';
+  try{ if (TTS) TTS.cancel(); }catch(e){}
+  stopRec(); render(true); renderVoiceBar();
+}
+function showCurrent(){
+  const qs = allQs(); voice.q = qs[voice.idx];
+  const sec = SECTIONS.find(s => s.qs.some(q => q.id === voice.q.id));
+  current = sec.id; render(); renderVoiceBar();
+  const node = document.getElementById('q_' + voice.q.id); if (node && node.scrollIntoView) node.scrollIntoView({block:'center', behavior:'smooth'});
+  askCurrent();
+}
+function askCurrent(){
+  if (!voice.on) return; stopRec(); voice.phase = 'asking'; voice.interim = '';
+  voice.msg = 'Asking: question ' + (voice.idx + 1) + ' of ' + allQs().length; renderVoiceBar();
+  const intro = (voice.idx === 0 || (allQs()[voice.idx - 1] && sectionOf(allQs()[voice.idx - 1]) !== sectionOf(voice.q))) ? sectionOf(voice.q).title + '. ' : '';
+  speak(intro + voice.q.q, () => { if (voice.on && voice.phase === 'asking') listen(); });
+}
+function sectionOf(q){ return SECTIONS.find(s => s.qs.some(x => x.id === q.id)); }
+function advance(d){
+  if (!voice.on) return; stopRec(); if (TTS) { try{ TTS.cancel(); }catch(e){} }
+  const n = voice.idx + d, total = allQs().length;
+  if (n < 0) { voice.idx = 0; showCurrent(); return; }
+  if (n >= total){
+    voice.on = false; voice.phase = 'idle'; voice.msg = 'That is the last question. Add any resolutions and actions next.';
+    go('resolutions'); renderVoiceBar(); speak('That completes the questions. Please record any resolutions and actions, then review.');
+    return;
+  }
+  voice.idx = n; showCurrent();
+}
+function stopRec(){ const r = voice.rec; voice.rec = null; if (r){ r.onend = null; r.onresult = null; r.onerror = null; try{ r.abort(); }catch(e){} } }
+function listen(){
+  if (!voice.on) return;
+  if (!SR || voice.noMic){ voice.phase = 'manual'; voice.msg = 'Question read aloud. Type or dictate your answer, then press Skip → for the next one.'; renderVoiceBar(); return; }
+  stopRec(); voice.phase = 'listening'; voice.msg = 'Listening… answer, or say “next”.'; renderVoiceBar();
+  const r = new SR(); r.lang = 'en-NZ'; r.continuous = true; r.interimResults = true; voice.rec = r;
+  r.onresult = function(ev){
+    let interim = '';
+    for (let i = ev.resultIndex; i < ev.results.length; i++){
+      const res = ev.results[i], t = res[0].transcript;
+      if (res.isFinal) handleFinal(t.trim()); else interim += t;
+    }
+    voice.interim = interim; renderVoiceBar();
+  };
+  r.onerror = function(ev){
+    if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed'){
+      voice.fatal = true;
+      voice.noMic = true; stopVoice(micHelp({name:'NotAllowedError'}, ''));
+    } else if (ev.error === 'audio-capture'){ stopVoice('No microphone was found.'); }
+    else if (ev.error === 'network'){ stopVoice('Speech recognition needs an internet connection.'); }
+    // 'no-speech' and 'aborted' are normal; onend restarts below
+  };
+  r.onend = function(){ if (voice.on && voice.phase === 'listening' && voice.rec === r) setTimeout(() => { if (voice.on && voice.phase === 'listening') listen(); }, 250); };
+  try{ r.start(); }catch(e){ /* already started */ }
+}
+function setStatus(q, status){ const a = state.answers[q.id] || (state.answers[q.id] = {status:'', note:''}); a.status = status; save(); }
+function handleFinal(text){
+  if (!text) return;
+  const q = voice.q, norm = text.toLowerCase().replace(/[.,!?]/g, '').trim(), words = norm.split(/\s+/).length;
+  const is = re => words <= 6 && re.test(norm);
+  if (is(/^(next|next question|move on|skip|that'?s all|that is all|done|finished)$/)) return advance(1);
+  if (is(/^(back|go back|previous|previous question)$/)) return advance(-1);
+  if (is(/^(repeat|say again|repeat that|repeat the question|read that again)$/)) return askCurrent();
+  if (is(/^(pause|stop|stop listening)$/)) return stopVoice('Paused. Press Start to resume where you left off.');
+  if (is(/^(not discussed|was not discussed|wasn'?t discussed|we didn'?t discuss (it|that)|no)$/)){ setStatus(q, 'no'); render(true); renderVoiceBar(); return advance(1); }
+  if (is(/^(not applicable|n a|na|doesn'?t apply)$/)){ setStatus(q, 'na'); render(true); renderVoiceBar(); return advance(1); }
+  if (is(/^(discussed|it was discussed|yes)$/)){ setStatus(q, 'yes'); render(true); renderVoiceBar(); return; }
+  // otherwise: it is the answer — append to the note and mark Discussed
+  const a = state.answers[q.id] || (state.answers[q.id] = {status:'', note:''});
+  const line = (voice.speaker ? voice.speaker + ': ' : '') + text.charAt(0).toUpperCase() + text.slice(1) + (/[.!?]$/.test(text) ? '' : '.');
+  a.note = (a.note ? a.note.trim() + ' ' : '') + line; a.status = 'yes'; save();
+  render(true); renderVoiceBar();
+}
+if (TTS && TTS.addEventListener) TTS.addEventListener('voiceschanged', function(){});
+window.addEventListener('beforeunload', function(){ try{ if (TTS) TTS.cancel(); }catch(e){} });
+
+render();
+renderVoiceBar();
+</script>
+</body>
+</html>
